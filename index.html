@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>Propositions & Commentaires</title>
+  <title>Avis & Témoignages</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     * {
@@ -68,7 +68,7 @@
       display: flex;
       gap: 15px;
     }
-    .comments-section {
+    .avis-section {
       flex: 1;
       background: white;
       border-radius: 12px;
@@ -76,42 +76,43 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       width: 100%;
     }
-    .comments-section h2 {
+    .avis-section h2 {
       margin-top: 0;
       color: #333;
       border-bottom: 2px solid #667eea;
       padding-bottom: 10px;
     }
-    .comment-card {
+    .avis-card {
       border: 1px solid #ddd;
       border-radius: 8px;
       padding: 15px;
       margin: 10px 0;
     }
-    .comment-header {
+    .avis-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
     }
-    .comment-author {
+    .avis-author {
       font-weight: 600;
       color: #333;
     }
-    .comment-situation {
+    .avis-etablissement {
       background: #667eea;
       color: white;
       padding: 2px 8px;
       border-radius: 12px;
       font-size: 0.8em;
     }
-    .comment-date {
+    .avis-date {
       font-size: 0.8em;
       color: #999;
     }
-    .comment-message {
+    .avis-message {
       color: #555;
       line-height: 1.6;
+      white-space: pre-wrap;
     }
     .admin-buttons {
       margin-top: 10px;
@@ -148,6 +149,7 @@
     .reply-text {
       color: #333;
       margin-top: 5px;
+      white-space: pre-wrap;
     }
     .reply-form {
       margin-top: 10px;
@@ -173,7 +175,7 @@
       background: #999;
       margin-left: 10px;
     }
-    .no-comments {
+    .no-avis {
       text-align: center;
       color: #999;
       padding: 40px;
@@ -191,184 +193,176 @@
       .header-actions { width: 100%; justify-content: center; }
       .btn { padding: 8px 12px; font-size: 0.85rem; }
       .main-content { flex-direction: column; }
-      .sidebar { width: 100%; }
-      .user-list li { padding: 10px; font-size: 0.9rem; }
       .content-area { padding: 12px; }
-      .comment-card { padding: 12px; }
-      .comment-header { flex-wrap: wrap; gap: 5px; }
-      .comment-author { font-size: 0.95rem; }
-      .comment-date { font-size: 0.8rem; }
-      .comment-body { font-size: 0.9rem; }
-      .comment-actions { gap: 8px; }
-      .reply-form input, .reply-form textarea { font-size: 14px; padding: 8px; }
-      .stats-bar { flex-wrap: wrap; gap: 10px; justify-content: center; }
-      .stat-value { font-size: 1.2rem; }
-      .stat-label { font-size: 0.8rem; }
+      .avis-card { padding: 12px; }
+      .avis-header { flex-wrap: wrap; gap: 5px; }
+      .avis-author { font-size: 0.95rem; }
+      .avis-date { font-size: 0.8rem; }
+      .reply-form textarea { font-size: 14px; padding: 8px; }
     }
 
     @media (max-width: 480px) {
       .header h1 { font-size: 1rem; }
       .btn { padding: 6px 10px; font-size: 0.8rem; }
-      .user-list li { padding: 8px; font-size: 0.85rem; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1><i class="fas fa-comments"></i> Propositions & Commentaires</h1>
+      <h1><i class="fas fa-star"></i> Avis & Témoignages</h1>
       <div>
         <a href="ajout.html" class="btn btn-primary">
-          <i class="fas fa-plus"></i> Nouvelle Proposition
+          <i class="fas fa-plus"></i> Nouveau Avis
         </a>
         <a href="../index.html" class="btn btn-retour" style="margin-left: 10px;">
           <i class="fas fa-home"></i> Retour
         </a>
       </div>
     </div>
-    
+
     <div class="main-content">
-      <div class="comments-section">
-        <h2><i class="fas fa-list"></i> Liste des Commentaires</h2>
-        <div id="comments-container">
-          <div class="no-comments">Chargement des commentaires...</div>
+      <div class="avis-section">
+        <h2><i class="fas fa-list"></i> Liste des Avis</h2>
+        <div id="avis-container">
+          <div class="no-avis">Chargement des avis...</div>
         </div>
       </div>
     </div>
   </div>
-  
+
   <script>
-    let allCommentaires = [];
-    
-    // Charger les commentaires au démarrage
-    async function chargerCommentaires() {
+    let allAvis = [];
+
+    // Charger les avis au démarrage
+    async function chargerAvis() {
       try {
-        const response = await fetch('/api/commentaires');
+        const response = await fetch('/api/avis');
         const result = await response.json();
-        
-        if (result.success && result.commentaires) {
-          allCommentaires = result.commentaires;
-          afficherCommentaires();
+
+        if (result.success && result.avis) {
+          allAvis = result.avis;
+          afficherAvis();
         } else {
-          document.getElementById('comments-container').innerHTML = `
-            <div class="no-comments">Aucun commentaire pour le moment</div>
+          document.getElementById('avis-container').innerHTML = `
+            <div class="no-avis">Aucun avis pour le moment</div>
           `;
         }
       } catch (e) {
         console.error(e);
-        document.getElementById('comments-container').innerHTML = `
-          <div class="no-comments">Erreur de chargement</div>
+        document.getElementById('avis-container').innerHTML = `
+          <div class="no-avis">Erreur de chargement</div>
         `;
       }
     }
-    
-    function afficherCommentaires() {
-      const container = document.getElementById('comments-container');
-      
-      const filtered = allCommentaires;
-      
+
+    function afficherAvis() {
+      const container = document.getElementById('avis-container');
+
+      const filtered = allAvis;
+
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="no-comments">Aucun commentaire</div>';
+        container.innerHTML = '<div class="no-avis">Aucun avis</div>';
         return;
       }
-      
+
       const isAdmin = sessionStorage.getItem('adminVerified') === 'true';
-      
+
       let html = '';
-      filtered.forEach(c => {
-        const date = new Date(c.created_at).toLocaleDateString('fr-FR', {
+      filtered.forEach(a => {
+        const date = new Date(a.created_at).toLocaleDateString('fr-FR', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit'
         });
-        
+
         // Afficher la réponse de l'admin si elle existe
         let replyHTML = '';
-        if (c.reponse_admin) {
+        if (a.reponse_admin) {
           replyHTML = `
             <div class="reply-section">
               <div class="reply-label">✉ Réponse de l'admin:</div>
-              <div class="reply-text">${c.reponse_admin}</div>
+              <div class="reply-text">${a.reponse_admin}</div>
             </div>
           `;
         }
-        
+
         // Boutons admin (Répondre et Supprimer)
         let adminButtons = '';
         if (isAdmin) {
           adminButtons = `
             <div class="admin-buttons">
-              <button class="btn-admin-action btn-reply" onclick="showReplyForm('${c.id}')">
+              <button class="btn-admin-action btn-reply" onclick="showReplyForm('${a.id}')">
                 <i class="fas fa-reply"></i> Répondre
               </button>
-              <button class="btn-admin-action btn-delete" onclick="deleteComment('${c.id}')">
+              <button class="btn-admin-action btn-delete" onclick="deleteAvis('${a.id}')">
                 <i class="fas fa-trash"></i> Supprimer
               </button>
             </div>
-            <div id="reply-form-${c.id}" class="reply-form" style="display:none;">
-              <textarea id="reply-text-${c.id}" placeholder="Votre réponse..."></textarea>
-              <button onclick="submitReply('${c.id}')">Envoyer la réponse</button>
-              <button class="cancel" onclick="hideReplyForm('${c.id}')">Annuler</button>
+            <div id="reply-form-${a.id}" class="reply-form" style="display:none;">
+              <textarea id="reply-text-${a.id}" placeholder="Votre réponse..."></textarea>
+              <button onclick="submitReply('${a.id}')">Envoyer la réponse</button>
+              <button class="cancel" onclick="hideReplyForm('${a.id}')">Annuler</button>
             </div>
           `;
         }
-        
+
         html += `
-          <div class="comment-card" id="comment-${c.id}">
-            <div class="comment-header">
+          <div class="avis-card" id="avis-${a.id}">
+            <div class="avis-header">
               <div>
-                <span class="comment-author">${c.nom}</span>
-                <span class="comment-situation">${c.situation}</span>
+                <span class="avis-author">${a.nom}</span>
+                <span class="avis-etablissement">${a.etablissement || ''}</span>
               </div>
-              <span class="comment-date">${date}</span>
+              <span class="avis-date">${date}</span>
             </div>
-            <div class="comment-message">${c.message}</div>
+            <div class="avis-message">${a.message}</div>
             ${replyHTML}
             ${adminButtons}
           </div>
         `;
       });
-      
+
       container.innerHTML = html;
     }
-    
-    function showReplyForm(commentId) {
-      document.getElementById(`reply-form-${commentId}`).style.display = 'block';
+
+    function showReplyForm(avisId) {
+      document.getElementById(`reply-form-${avisId}`).style.display = 'block';
     }
-    
-    function hideReplyForm(commentId) {
-      document.getElementById(`reply-form-${commentId}`).style.display = 'none';
-      document.getElementById(`reply-text-${commentId}`).value = '';
+
+    function hideReplyForm(avisId) {
+      document.getElementById(`reply-form-${avisId}`).style.display = 'none';
+      document.getElementById(`reply-text-${avisId}`).value = '';
     }
-    
-    async function submitReply(commentId) {
-      const replyText = document.getElementById(`reply-text-${commentId}`).value.trim();
+
+    async function submitReply(avisId) {
+      const replyText = document.getElementById(`reply-text-${avisId}`).value.trim();
       if (!replyText) {
         alert('Veuillez entrer une réponse');
         return;
       }
-      
+
       const adminPass = prompt('Entrez le mot de passe admin:');
       if (!adminPass) return;
-      
+
       try {
-        const response = await fetch('/api/commentaires', {
+        const response = await fetch('/api/avis', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'reply',
             password: adminPass,
-            commentId: commentId,
+            avisId: avisId,
             reponse: replyText
           })
         });
-        
+
         const result = await response.json();
         if (result.success) {
           alert('Réponse enregistrée!');
-          chargerCommentaires();
+          chargerAvis();
         } else {
           alert('Erreur: ' + result.message);
         }
@@ -376,28 +370,28 @@
         alert('Erreur');
       }
     }
-    
-    async function deleteComment(commentId) {
-      if (!confirm('Voulez-vous vraiment supprimer ce commentaire?')) return;
-      
+
+    async function deleteAvis(avisId) {
+      if (!confirm('Voulez-vous vraiment supprimer cet avis?')) return;
+
       const adminPass = prompt('Entrez le mot de passe admin:');
       if (!adminPass) return;
-      
+
       try {
-        const response = await fetch('/api/commentaires', {
+        const response = await fetch('/api/avis', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'delete',
             password: adminPass,
-            commentId: commentId
+            avisId: avisId
           })
         });
-        
+
         const result = await response.json();
         if (result.success) {
-          alert('Commentaire supprimé!');
-          chargerCommentaires();
+          alert('Avis supprimé!');
+          chargerAvis();
         } else {
           alert('Erreur: ' + result.message);
         }
@@ -405,9 +399,9 @@
         alert('Erreur');
       }
     }
-    
+
     // Charger au démarrage
-    chargerCommentaires();
+    chargerAvis();
   </script>
 </body>
 </html>
