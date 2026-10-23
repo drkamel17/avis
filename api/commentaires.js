@@ -1,6 +1,6 @@
 export const runtime = 'edge';
 
-async function sendResendEmail(to, subject, type, nom, situation, lien1, lien2) {
+async function sendResendEmail(to, subject, type, nom, situation, lien1, lien2, lien3) {
   const apiKey = process.env.RESEND_API_KEY;
   
   console.log('[DEBUG] sendResendEmail - API key presente:', !!apiKey);
@@ -27,6 +27,7 @@ async function sendResendEmail(to, subject, type, nom, situation, lien1, lien2) 
           <a href="${lien1}" style="display: inline-block; background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 5px;">🔧 Ordonnances Sur Web</a>
           <br>
           <a href="${lien2}" style="display: inline-block; background: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 5px;">🔧 Certificats Medicaux</a>
+          ${lien3 ? `<br><a href="${lien3}" style="display: inline-block; background: #00bcd4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 5px;">🔧 Avis Extension</a>` : ''}
         </div>
       </div>
     </div>
@@ -113,7 +114,8 @@ const supabaseKey = process.env.SUPABASE_KEY;
           nom,
           situation || 'Autre',
           'https://ordonnances-sur-web.vercel.app/admin.html',
-          'https://certificats-medicaux.vercel.app/admin.html'
+          'https://certificats-medicaux.vercel.app/admin.html',
+          'https://avis-extension-ord.vercel.app/admin.html'
         ).then(emailResult => {
           console.log('[DEBUG] Resultat email:', emailResult);
         });

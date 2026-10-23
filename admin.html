@@ -355,7 +355,7 @@ async function chargerAvisPending() {
               <span class="badge-etablissement">${a.etablissement || 'Non précisé'}</span>
             </div>
             <div class="pending-user">${date}</div>
-            <div class="comment-msg">${a.message}</div>
+            <div class="comment-msg"><i class="fab fa-firefox-browser" style="color:#ff7139;margin-right:6px;" title="Avis provenant de l'extension Firefox"></i>${a.message}</div>
             <button class="btn btn-confirm" onclick="confirmerAvis('${a.id}')" style="margin-right:10px;">Confirmer</button>
             <button class="btn btn-reject" onclick="rejeterAvis('${a.id}')">Rejeter</button>
           </div>
